@@ -1,6 +1,8 @@
+import javax.swing.JButton;
+
 public class Game {
     public static void main(String[] args) {
-        Panel openingPanel = new openingPanel();
+        Panel openingPanel = new Panel();
         Window openingWindow = new Window(openingPanel);
         openingWindow.setTitle("welcome to flappy-bird");
         try {
@@ -10,8 +12,11 @@ public class Game {
             System.out.println("failed sleep for 1.582 seconds.");
         }
         openingWindow.dispose();
-        new Window(openingPanel);
 
 
+        Panel panel = new Panel();
+        JButton playButton = new JButton("play");
+        panel.add(playButton);
+        new Window(panel);
     }
 }
