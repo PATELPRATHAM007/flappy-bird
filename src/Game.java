@@ -1,6 +1,6 @@
 public class Game {
     public static void main(String[] args) {
-        openingPanel openingPanel = new openingPanel();
+        Panel openingPanel = new openingPanel();
         Window openingWindow = new Window(openingPanel);
         openingWindow.setTitle("welcome to flappy-bird");
         try {
