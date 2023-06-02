@@ -1,5 +1,6 @@
 public class Game {
     public static void main(String[] args) {
-        new Window(new Panel());
+        Panel panel = new Panel();
+        new Window(panel);
     }
 }
