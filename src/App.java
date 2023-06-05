@@ -16,7 +16,7 @@ public class App extends Application {
 
         StackPane stackContainer = new StackPane();
         
-        String backgroundImage = getClass().getResource("city.png").toExternalForm();
+        String backgroundImage = getClass().getResource("img/city.png").toExternalForm();
 
         stackContainer.setStyle("-fx-background-image: url('" + backgroundImage + "'); " +
                 "-fx-background-size: cover; " +
@@ -24,7 +24,7 @@ public class App extends Application {
                 "-fx-background-position: center center;");
 
                 
-        Image logo = Addimage("flappy bird loco.png");
+        Image logo = Addimage("img/logo.png");
         ImageView logoView = viewImage(logo);
 
         stackContainer.getChildren().add(logoView);
@@ -35,7 +35,7 @@ public class App extends Application {
         StackPane.setAlignment(logoView, Pos.TOP_CENTER);
         logoView.setTranslateY(40);
 
-        Image birdImage = Addimage("bird.png");
+        Image birdImage = Addimage("img/bird.png");
         ImageView birdImageView = viewImage(birdImage);
         
         StackPane.setAlignment(birdImageView, Pos.CENTER);
