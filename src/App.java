@@ -15,15 +15,18 @@ public class App extends Application {
         window.setTitle("Flappy Bird");
 
         StackPane stackContainer = new StackPane();
-        String backgroundImage = getClass().getResource("city.png").toExternalForm();
+        
+        String backgroundImage = getClass().getResource("img/city.png").toExternalForm();
 
         stackContainer.setStyle("-fx-background-image: url('" + backgroundImage + "'); " +
                 "-fx-background-size: cover; " +
                 "-fx-background-repeat: no-repeat; " +
                 "-fx-background-position: center center;");
 
-        Image logo = new Image(getClass().getResourceAsStream("flappy bird loco.png"));
-        ImageView logoView = new ImageView(logo);
+                
+        Image logo = Addimage("img/logo.png");
+        ImageView logoView = viewImage(logo);
+
         stackContainer.getChildren().add(logoView);
 
         logoView.fitWidthProperty().bind(stackContainer.widthProperty().multiply(0.6));
@@ -32,28 +35,25 @@ public class App extends Application {
         StackPane.setAlignment(logoView, Pos.TOP_CENTER);
         logoView.setTranslateY(40);
 
-        Image birdImage = new Image(getClass().getResourceAsStream("bird.png"));
-        ImageView birdImageView = new ImageView(birdImage);
+        Image birdImage = Addimage("img/bird.png");
+        ImageView birdImageView = viewImage(birdImage);
+        
         StackPane.setAlignment(birdImageView, Pos.CENTER);
-        logoView.setTranslateY(40);
-        birdImageView.setFitWidth(80);
-        birdImageView.setFitHeight(60);
+        ImageSize(birdImageView, 80, 60);
         birdImageView.setTranslateY(-20);
         stackContainer.getChildren().add(birdImageView);
 
-        Button startButton = new Button("Start");
-        startButton.setPrefWidth(150);
-        startButton.setPrefHeight(35);
+        Button startButton = CreateButton("Start", 150, 35);
+        
         startButton.setOnAction(event -> {
             // TODO: Implement start button logic
             System.out.println("Start button clicked");
         });
 
         
-        Button exitButton = new Button("Exit");
+        Button exitButton = CreateButton("exit", 150, 35);
         exitButton.setOnAction(event -> window.close()); 
-        exitButton.setPrefWidth(150);
-        exitButton.setPrefHeight(35);
+
         VBox buttonContainer = new VBox(20); 
         buttonContainer.getChildren().addAll(startButton, exitButton);
         buttonContainer.setAlignment(Pos.CENTER);
@@ -67,5 +67,27 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+    private Button CreateButton(String string , double width,double hight)
+    {
+        Button button = new Button(string);
+        button.setPrefHeight(hight);
+        button.setPrefWidth(width);
+        return button;
+    }
+    private Image Addimage(String file)
+    {
+        Image image = new Image(getClass().getResourceAsStream(file));
+        return image;
+    }
+    private ImageView viewImage(Image image)
+    {
+        ImageView imageView = new ImageView(image);
+        return imageView;
+    }
+    private void ImageSize(ImageView image,double width,double hight)
+    {
+        image.setFitWidth(width);
+        image.setFitHeight(hight);
     }
 }

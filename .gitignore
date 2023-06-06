@@ -26,3 +26,6 @@ replay_pid*
 # ides
 .vscode
 .idea
+
+# personal
+src/run.sh
