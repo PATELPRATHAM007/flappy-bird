@@ -3,6 +3,8 @@ import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -27,9 +29,15 @@ public class App extends Application {
         StackPane stackPane = new StackPane();
         Group grassGroup = new Group();
 
+        Image cityImage = Addimage("city.png");
+        ImageView cityImageView = viewImage(cityImage);
+        ImageSize(cityImageView, Screen_Width, 563);
+        stackPane.setAlignment(cityImageView,Pos.TOP_CENTER);
+        stackPane.getChildren().addAll(cityImageView);
+
 
         Rectangle ground = createRectangle(ground_width, ground_height);
-        ground.setFill(Color.RED);
+        ground.setFill(Color.rgb(221,217, 146));
         stackPane.setAlignment(ground,Pos.BOTTOM_CENTER);
     
 
@@ -64,5 +72,20 @@ public class App extends Application {
     private Rectangle createRectangle(int width, int height) {
         Rectangle rectangle = new Rectangle(width, height);
         return rectangle;
+    }
+    private Image Addimage(String file)
+    {
+        Image image = new Image(getClass().getResourceAsStream(file));
+        return image;
+    }
+    private ImageView viewImage(Image image)
+    {
+        ImageView imageView = new ImageView(image);
+        return imageView;
+    }
+    private void ImageSize(ImageView image,double width,double hight)
+    {
+        image.setFitWidth(width);
+        image.setFitHeight(hight);
     }
 }
