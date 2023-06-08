@@ -9,7 +9,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class App extends Application {
+public class Ground extends Application {
 
     private static int Screen_Width = 480;
     private static int Screen_Height = 620;
@@ -29,7 +29,7 @@ public class App extends Application {
         StackPane stackPane = new StackPane();
         Group grassGroup = new Group();
 
-        Image cityImage = Addimage("city.png");
+        Image cityImage = Addimage("img/city.png");
         ImageView cityImageView = viewImage(cityImage);
         ImageSize(cityImageView, Screen_Width, 563);
         stackPane.setAlignment(cityImageView,Pos.TOP_CENTER);
