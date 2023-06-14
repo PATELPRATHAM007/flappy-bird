@@ -13,10 +13,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class App extends Application {
+public class newApp extends Application {
     private static int Screen_Width = 480;
     private static int Screen_Height = 570;
     private static int ground_width = Screen_Width + 70;
@@ -119,25 +120,19 @@ public class App extends Application {
     private void SecondaryStage() {
         Stage SecondaryStage = new Stage();
         SecondaryStage.setTitle("Flappy Bird");
-        StackPane secondStackPane = new StackPane();
-
+        VBox All_Element = new VBox(); 
         
-
-        ImageView city = createImage("xcity.jpg", Screen_Width + 70,527);
-        secondStackPane.getChildren().add(city);
-        StackPane.setAlignment(city, Pos.TOP_CENTER);
         
-        ImageView pipe = createImage("pipe.png", 200, Screen_Height);
-        StackPane.setAlignment(pipe, Pos.TOP_CENTER);
-        secondStackPane.getChildren().add(pipe);
+        VBox imageBox = new VBox();
+        ImageView city = createImage("xcity.jpg", Screen_Width + 70,457);
+        imageBox.getChildren().add(city);
+        imageBox.setAlignment(Pos.TOP_CENTER);
+        
+        // ImageView pipe = createImage("pipe.png", 200, Screen_Height);
+        // StackPane.setAlignment(pipe, Pos.TOP_CENTER);
+        // secondStackPane.getChildren().add(pipe);
 
-
-        Rectangle ground = createRectangle(ground_width,ground_height);
-        ground.setFill(Color.rgb(221,217, 146));
-        secondStackPane.getChildren().add(ground);
-        StackPane.setAlignment(ground, Pos.CENTER);        
-        ground.setTranslateY(233);
-
+        VBox grassbBox = new VBox();
         Group grassGroup = new Group();
         Rectangle[] sub_rectangles = new Rectangle[25];
         while (i < 25) {
@@ -155,17 +150,23 @@ public class App extends Application {
             move += Sub_Grass_Width; // Add gap between rectangles
             i++;
         }
-        secondStackPane.getChildren().add(grassGroup);
-        StackPane.setAlignment(grassGroup, Pos.CENTER);
-        grassGroup.setTranslateY(183);
+        grassbBox.getChildren().add(grassGroup);
+        grassbBox.setAlignment(Pos.BOTTOM_CENTER);
+
+        VBox earthbox = new VBox();
+        Rectangle ground = createRectangle(ground_width,ground_height);
+        ground.setFill(Color.rgb(221,217, 146));
+        earthbox.getChildren().add(ground);
+        earthbox.setAlignment(Pos.BOTTOM_CENTER);
+
+        All_Element.getChildren().addAll(imageBox,grassbBox,earthbox);
 
         Button closeButton = createButton("close", 150, 50);
-        closeButton.setOnAction(Event -> SecondaryStage.close());
-        secondStackPane.getChildren().add(closeButton);     
+        closeButton.setOnAction(Event -> SecondaryStage.close());   
         
         
 
-        Scene scene = new Scene(secondStackPane, Screen_Width, Screen_Height);
+        Scene scene = new Scene(All_Element, Screen_Width, Screen_Height);
         SecondaryStage.setScene(scene);
         SecondaryStage.show();
     }
