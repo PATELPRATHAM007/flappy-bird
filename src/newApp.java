@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class newApp extends Application {
+public class App extends Application {
     private static int Screen_Width = 480;
     private static int Screen_Height = 570;
     private static int ground_width = Screen_Width + 70;
@@ -34,10 +34,10 @@ public class newApp extends Application {
         windowStage.initStyle(StageStyle.UNDECORATED);
 
         StackPane stackPane = new StackPane();
-        ImageView background = createImage("xcity.jpg", 500, 450);
+        ImageView background = createImage("/img/xcity.jpg", 500, 450);
         stackPane.getChildren().add(background);
 
-        Label logo = createLabelWithImage("logo.png", 450, 100);
+        Label logo = createLabelWithImage("img/logo.png", 450, 100);
         stackPane.getChildren().add(logo);
         StackPane.setAlignment(logo, Pos.CENTER);
         logo.setTranslateY(-140);
@@ -47,13 +47,12 @@ public class newApp extends Application {
         scaleTransition.setFromY(1.0);
         scaleTransition.setToX(1.08);
         scaleTransition.setToY(1.08);
- 
-        
+
         scaleTransition.setAutoReverse(true);
         scaleTransition.setCycleCount(Timeline.INDEFINITE);
         scaleTransition.play();
 
-        ImageView birdImageView = createImage("bird.png", 100, 90);
+        ImageView birdImageView = createImage("img/bird.png", 100, 90);
         stackPane.getChildren().add(birdImageView);
         StackPane.setAlignment(birdImageView, Pos.CENTER);
         birdImageView.setTranslateY(-30);
@@ -119,56 +118,68 @@ public class newApp extends Application {
     }
 
     private void SecondaryStage() {
-        Stage SecondaryStage = new Stage();
-        SecondaryStage.setTitle("Flappy Bird");
-        VBox All_Element = new VBox(); 
-        
-        
-        VBox imageBox = new VBox();
-        ImageView city = createImage("xcity.jpg", Screen_Width + 70,457);
-        imageBox.getChildren().add(city);
-        imageBox.setAlignment(Pos.TOP_CENTER);
-        
-        // ImageView pipe = createImage("pipe.png", 200, Screen_Height);
-        // StackPane.setAlignment(pipe, Pos.TOP_CENTER);
-        // secondStackPane.getChildren().add(pipe);
+    Stage secondaryStage = new Stage();
+    secondaryStage.setTitle("Flappy Bird");
+    StackPane secondaryPanel = new StackPane();
 
-        VBox grassbBox = new VBox();
-        Group grassGroup = new Group();
-        Rectangle[] sub_rectangles = new Rectangle[25];
-        while (i < 25) {
-            sub_rectangles[i] = createRectangle(Sub_Grass_Width, Sub_Grass_Height);
-            if (col == 0) {
-                sub_rectangles[i].setFill(Color.rgb(115, 192, 46));
-                col = 1;
-            } else {
-                sub_rectangles[i].setFill(Color.rgb(142, 213, 70));
-                col = 0;
-            }
+    VBox allElement = new VBox();
+    allElement.setAlignment(Pos.CENTER);
+    allElement.setTranslateY(250);
 
-            grassGroup.getChildren().add(sub_rectangles[i]);
-            sub_rectangles[i].setTranslateX(move);
-            move += Sub_Grass_Width; // Add gap between rectangles
-            i++;
+    VBox imageBox = new VBox();
+    ImageView city = createImage("/img/xcity.jpg", Screen_Width + 70, 496);
+    imageBox.getChildren().add(city);
+    imageBox.setAlignment(Pos.CENTER);
+    imageBox.setTranslateY(-37);
+
+    VBox grassBox = new VBox();
+    Group grassGroup = new Group();
+    Rectangle[] subRectangles = new Rectangle[25];
+    while (i < 25) {
+        subRectangles[i] = createRectangle(Sub_Grass_Width, Sub_Grass_Height);
+        if (col == 0) {
+            subRectangles[i].setFill(Color.rgb(115, 192, 46));
+            col = 1;
+        } else {
+            subRectangles[i].setFill(Color.rgb(142, 213, 70));
+            col = 0;
         }
-        grassbBox.getChildren().add(grassGroup);
-        grassbBox.setAlignment(Pos.BOTTOM_CENTER);
 
-        VBox earthbox = new VBox();
-        Rectangle ground = createRectangle(ground_width,ground_height);
-        ground.setFill(Color.rgb(221,217, 146));
-        earthbox.getChildren().add(ground);
-        earthbox.setAlignment(Pos.BOTTOM_CENTER);
-
-        All_Element.getChildren().addAll(imageBox,grassbBox,earthbox);
-
-        Button closeButton = createButton("close", 150, 50);
-        closeButton.setOnAction(Event -> SecondaryStage.close());   
-        
-        
-
-        Scene scene = new Scene(All_Element, Screen_Width, Screen_Height);
-        SecondaryStage.setScene(scene);
-        SecondaryStage.show();
+        grassGroup.getChildren().add(subRectangles[i]);
+        subRectangles[i].setTranslateX(move);
+        move += Sub_Grass_Width; // Add gap between rectangles
+        i++;
     }
+    grassBox.getChildren().add(grassGroup);
+    grassBox.setAlignment(Pos.BOTTOM_CENTER);
+
+    VBox earthBox = new VBox();
+    Rectangle ground = createRectangle(ground_width, ground_height);
+    ground.setFill(Color.rgb(221, 217, 146));
+    earthBox.getChildren().add(ground);
+    earthBox.setAlignment(Pos.BOTTOM_CENTER);
+
+    secondaryPanel.getChildren().add(imageBox);
+
+    // ImageView pipe = createImage("pipe.png", 200, 400);
+    // pipe.setLayoutX(400);
+    // pipe.setLayoutY(200);
+    // Pane root = new Pane();
+    // root.setPrefSize(Screen_Width, Screen_Height);
+    // root.getChildren().add(pipe);
+    // secondaryPanel.getChildren().add(root);
+
+
+    allElement.getChildren().addAll(grassBox, earthBox);
+
+    secondaryPanel.getChildren().add(allElement);
+    StackPane.setAlignment(allElement, Pos.CENTER);
+
+
+
+    Scene scene = new Scene(secondaryPanel, Screen_Width, Screen_Height);
+    secondaryStage.setScene(scene);
+    secondaryStage.show();
+}
+
 }
