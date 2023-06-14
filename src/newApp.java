@@ -47,7 +47,8 @@ public class newApp extends Application {
         scaleTransition.setFromY(1.0);
         scaleTransition.setToX(1.08);
         scaleTransition.setToY(1.08);
-
+ 
+        
         scaleTransition.setAutoReverse(true);
         scaleTransition.setCycleCount(Timeline.INDEFINITE);
         scaleTransition.play();
