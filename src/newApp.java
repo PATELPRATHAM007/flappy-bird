@@ -1,9 +1,11 @@
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import java.util.*;
 import javafx.util.Duration;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -17,7 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class App extends Application {
+public class newApp extends Application {
     private static int Screen_Width = 480;
     private static int Screen_Height = 570;
     private static int ground_width = Screen_Width + 70;
@@ -161,17 +163,28 @@ public class App extends Application {
 
     secondaryPanel.getChildren().add(imageBox);
 
-    // ImageView pipe = createImage("pipe.png", 200, 400);
-    // pipe.setLayoutX(400);
-    // pipe.setLayoutY(200);
-    // Pane root = new Pane();
-    // root.setPrefSize(Screen_Width, Screen_Height);
-    // root.getChildren().add(pipe);
-    // secondaryPanel.getChildren().add(root);
+    
+    
+    VBox pipes = new VBox();
+    pipes.setSpacing(95);
+    
+    Random random = new Random();
+    int randomNumber = random.nextInt(300 - 90 + 1)+30;
 
+
+    ImageView pipe = createImage("/img/pipe.png", 260, 380);
+    VBox.setMargin(pipe, new Insets(randomNumber,0,0, 580+5));
+    pipes.getChildren().add(pipe);
+    
+    ImageView antipipe = createImage("/img/antipipe.png", 260, 380);
+    VBox.setMargin(antipipe, new Insets(0, 0, 0,580));
+    // VBox.setMargin(button, new Insets(marginTop, marginRight, marginBottom, marginLeft));
+    pipes.getChildren().add(antipipe);
+    secondaryPanel.getChildren().add(pipes);
+
+    
 
     allElement.getChildren().addAll(grassBox, earthBox);
-
     secondaryPanel.getChildren().add(allElement);
     StackPane.setAlignment(allElement, Pos.CENTER);
 
