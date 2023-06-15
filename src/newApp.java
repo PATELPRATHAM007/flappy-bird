@@ -1,5 +1,6 @@
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,6 +31,10 @@ public class newApp extends Application {
     private int move = -550;
     private int i = 0;
     private int col = 0;
+
+    private VBox pipes;
+    private TranslateTransition pipeTransition;
+
     @Override
     public void start(Stage windowStage) throws Exception {
         windowStage.setTitle("Flappy Bird");
@@ -97,11 +102,11 @@ public class newApp extends Application {
         return button;
     }
 
-    private Rectangle createRectangle( double width, double height) {
+    private Rectangle createRectangle(double width, double height) {
         Rectangle rectangle = new Rectangle(width, height);
         // rectangle.setX(horizontal_position);
         // rectangle.setY(vertical_position);
-         return rectangle;
+        return rectangle;
     }
 
     private Label createLabelWithImage(String file, double width, double height) {
@@ -120,79 +125,95 @@ public class newApp extends Application {
     }
 
     private void SecondaryStage() {
-    Stage secondaryStage = new Stage();
-    secondaryStage.setTitle("Flappy Bird");
-    StackPane secondaryPanel = new StackPane();
+        Stage secondaryStage = new Stage();
+        secondaryStage.setTitle("Flappy Bird");
+        StackPane secondaryPanel = new StackPane();
 
-    VBox allElement = new VBox();
-    allElement.setAlignment(Pos.CENTER);
-    allElement.setTranslateY(250);
+        VBox allElement = new VBox();
+        allElement.setAlignment(Pos.CENTER);
+        allElement.setTranslateY(250);
 
-    VBox imageBox = new VBox();
-    ImageView city = createImage("/img/xcity.jpg", Screen_Width + 70, 496);
-    imageBox.getChildren().add(city);
-    imageBox.setAlignment(Pos.CENTER);
-    imageBox.setTranslateY(-37);
+        VBox imageBox = new VBox();
+        ImageView city = createImage("/img/xcity.jpg", Screen_Width + 70, 496);
+        imageBox.getChildren().add(city);
+        imageBox.setAlignment(Pos.CENTER);
+        imageBox.setTranslateY(-37);
 
-    VBox grassBox = new VBox();
-    Group grassGroup = new Group();
-    Rectangle[] subRectangles = new Rectangle[25];
-    while (i < 25) {
-        subRectangles[i] = createRectangle(Sub_Grass_Width, Sub_Grass_Height);
-        if (col == 0) {
-            subRectangles[i].setFill(Color.rgb(115, 192, 46));
-            col = 1;
-        } else {
-            subRectangles[i].setFill(Color.rgb(142, 213, 70));
-            col = 0;
+        VBox grassBox = new VBox();
+        Group grassGroup = new Group();
+        Rectangle[] subRectangles = new Rectangle[25];
+        while (i < 25) {
+            subRectangles[i] = createRectangle(Sub_Grass_Width, Sub_Grass_Height);
+            if (col == 0) {
+                subRectangles[i].setFill(Color.rgb(115, 192, 46));
+                col = 1;
+            } else {
+                subRectangles[i].setFill(Color.rgb(142, 213, 70));
+                col = 0;
+            }
+
+            grassGroup.getChildren().add(subRectangles[i]);
+            subRectangles[i].setTranslateX(move);
+            move += Sub_Grass_Width; // Add gap between rectangles
+            i++;
         }
+        grassBox.getChildren().add(grassGroup);
+        grassBox.setAlignment(Pos.BOTTOM_CENTER);
 
-        grassGroup.getChildren().add(subRectangles[i]);
-        subRectangles[i].setTranslateX(move);
-        move += Sub_Grass_Width; // Add gap between rectangles
-        i++;
+        VBox earthBox = new VBox();
+        Rectangle ground = createRectangle(ground_width, ground_height);
+        ground.setFill(Color.rgb(221, 217, 146));
+        earthBox.getChildren().add(ground);
+        earthBox.setAlignment(Pos.BOTTOM_CENTER);
+
+        secondaryPanel.getChildren().add(imageBox);
+
+        pipes = new VBox();
+        pipes.setSpacing(95);
+
+        Random random = new Random();
+        int randomNumber = random.nextInt(300 - 90 + 1) + 20;
+
+        ImageView pipe = createImage("/img/pipe.png", 260, 380);
+        VBox.setMargin(pipe, new Insets(randomNumber, 0, 0, 580 + 5));
+        pipes.getChildren().add(pipe);
+
+        ImageView antipipe = createImage("/img/antipipe.png", 260, 380);
+        VBox.setMargin(antipipe, new Insets(0, 0, 0, 580));
+        pipes.getChildren().add(antipipe);
+        secondaryPanel.getChildren().add(pipes);
+
+        allElement.getChildren().addAll(grassBox, earthBox);
+        secondaryPanel.getChildren().add(allElement);
+        StackPane.setAlignment(allElement, Pos.CENTER);
+
+        Scene scene = new Scene(secondaryPanel, Screen_Width, Screen_Height);
+        secondaryStage.setScene(scene);
+        secondaryStage.show();
+
+        // Move pipes animation
+        pipeTransition = new TranslateTransition(Duration.seconds(10), pipes);
+        pipeTransition.setFromX(500);
+        pipeTransition.setToX(-600);
+        pipeTransition.setCycleCount(Timeline.INDEFINITE);
+        pipeTransition.play();
+        pipeTransition.setOnFinished(event -> {
+            
+            pipes.getChildren().clear();
+
+            int newRandomNumber = random.nextInt(300 - 90 + 1) + 20;
+
+            ImageView newPipe = createImage("/img/pipe.png", 260, 380);
+            VBox.setMargin(newPipe, new Insets(newRandomNumber, 0, 0, Screen_Width + 5));
+            pipes.getChildren().add(newPipe);
+
+            ImageView newAntipipe = createImage("/img/antipipe.png", 260, 380);
+            VBox.setMargin(newAntipipe, new Insets(10, 0, 0, Screen_Width));
+            pipes.getChildren().add(newAntipipe);
+
+            pipeTransition.setFromX(Screen_Width);
+            pipeTransition.setToX(-pipes.getWidth());
+            pipeTransition.play();
+        });
     }
-    grassBox.getChildren().add(grassGroup);
-    grassBox.setAlignment(Pos.BOTTOM_CENTER);
-
-    VBox earthBox = new VBox();
-    Rectangle ground = createRectangle(ground_width, ground_height);
-    ground.setFill(Color.rgb(221, 217, 146));
-    earthBox.getChildren().add(ground);
-    earthBox.setAlignment(Pos.BOTTOM_CENTER);
-
-    secondaryPanel.getChildren().add(imageBox);
-
-    
-    
-    VBox pipes = new VBox();
-    pipes.setSpacing(95);
-    
-    Random random = new Random();
-    int randomNumber = random.nextInt(300 - 90 + 1)+30;
-
-
-    ImageView pipe = createImage("/img/pipe.png", 260, 380);
-    VBox.setMargin(pipe, new Insets(randomNumber,0,0, 580+5));
-    pipes.getChildren().add(pipe);
-    
-    ImageView antipipe = createImage("/img/antipipe.png", 260, 380);
-    VBox.setMargin(antipipe, new Insets(0, 0, 0,580));
-    // VBox.setMargin(button, new Insets(marginTop, marginRight, marginBottom, marginLeft));
-    pipes.getChildren().add(antipipe);
-    secondaryPanel.getChildren().add(pipes);
-
-    
-
-    allElement.getChildren().addAll(grassBox, earthBox);
-    secondaryPanel.getChildren().add(allElement);
-    StackPane.setAlignment(allElement, Pos.CENTER);
-
-
-
-    Scene scene = new Scene(secondaryPanel, Screen_Width, Screen_Height);
-    secondaryStage.setScene(scene);
-    secondaryStage.show();
-}
-
 }
