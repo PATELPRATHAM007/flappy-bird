@@ -15,12 +15,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class newApp extends Application {
+public class App extends Application {
     private static int Screen_Width = 480;
     private static int Screen_Height = 570;
     private static int ground_width = Screen_Width + 70;
@@ -167,21 +168,40 @@ public class newApp extends Application {
         earthBox.setAlignment(Pos.BOTTOM_CENTER);
 
         secondaryPanel.getChildren().add(imageBox);
+        
+        int[] values = new int[56];
+        int range = -280;
+        int j = 0;
+        while (range < 280) {
+            values[j] = range + 10;
+            System.out.println(values[j]);
+            j++;
+            range += 10; // Increment the range
+        }
+        for (int i = 0; i < 4; i++) {
+        HBox newpipes = new HBox();
+        newpipes.setSpacing(30);
 
-        pipes = new VBox();
-        pipes.setSpacing(95);
+        VBox pipeVBox = new VBox();
+        pipeVBox.setSpacing(50);
 
-        Random random = new Random();
-        int randomNumber = random.nextInt(300 - 90 + 1) + 20;
 
-        ImageView pipe = createImage("/img/pipe.png", 260, 380);
-        VBox.setMargin(pipe, new Insets(randomNumber, 0, 0, 580 + 5));
-        pipes.getChildren().add(pipe);
+    Random r = new Random();
+    int randomIndex = r.nextInt(values.length);
+    int randomValue = values[randomIndex];
 
-        ImageView antipipe = createImage("/img/antipipe.png", 260, 380);
-        VBox.setMargin(antipipe, new Insets(0, 0, 0, 580));
-        pipes.getChildren().add(antipipe);
-        secondaryPanel.getChildren().add(pipes);
+    ImageView pipe = createImage("/img/pipe.png", 260, 420);
+    VBox.setMargin(pipe, new Insets(randomValue, 0, 0, Screen_Width + 5));
+    pipeVBox.getChildren().add(pipe);
+
+    ImageView antipipe = createImage("/img/antipipe.png", 260, 420);
+    VBox.setMargin(antipipe, new Insets(0, 0, 0, Screen_Width));
+    pipeVBox.getChildren().add(antipipe);
+
+    newpipes.getChildren().add(pipeVBox);
+    HBox.setMargin(pipeVBox, new Insets(0, 0, 0, i * 200)); // Adjust the spacing between newpipes horizontally
+    secondaryPanel.getChildren().add(newpipes);
+}
 
         allElement.getChildren().addAll(grassBox, earthBox);
         secondaryPanel.getChildren().add(allElement);
@@ -190,30 +210,5 @@ public class newApp extends Application {
         Scene scene = new Scene(secondaryPanel, Screen_Width, Screen_Height);
         secondaryStage.setScene(scene);
         secondaryStage.show();
-
-        // Move pipes animation
-        pipeTransition = new TranslateTransition(Duration.seconds(10), pipes);
-        pipeTransition.setFromX(500);
-        pipeTransition.setToX(-600);
-        pipeTransition.setCycleCount(Timeline.INDEFINITE);
-        pipeTransition.play();
-        pipeTransition.setOnFinished(event -> {
-            
-            pipes.getChildren().clear();
-
-            int newRandomNumber = random.nextInt(300 - 90 + 1) + 20;
-
-            ImageView newPipe = createImage("/img/pipe.png", 260, 380);
-            VBox.setMargin(newPipe, new Insets(newRandomNumber, 0, 0, Screen_Width + 5));
-            pipes.getChildren().add(newPipe);
-
-            ImageView newAntipipe = createImage("/img/antipipe.png", 260, 380);
-            VBox.setMargin(newAntipipe, new Insets(10, 0, 0, Screen_Width));
-            pipes.getChildren().add(newAntipipe);
-
-            pipeTransition.setFromX(Screen_Width);
-            pipeTransition.setToX(-pipes.getWidth());
-            pipeTransition.play();
-        });
     }
 }
