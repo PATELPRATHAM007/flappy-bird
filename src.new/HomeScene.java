@@ -26,19 +26,21 @@ public class HomeScene extends Scene {
         HBox buttonBox = new HBox();
 
         Button startButton = new Button("start");
-        
-        Button endButton = new Button("end");
+        startButton.setOnAction(e -> controller.handleEvent(Controller.START_GAME));
+        Button endButton = new Button("exit");
         endButton.setOnAction(e -> controller.handleEvent(Controller.EXIT_GAME));
 
         buttonBox.getChildren().addAll(startButton, endButton);
         startStackPane.getChildren().add(buttonBox);
+
+        // temp
+        System.out.println(controller);
     }
 
-    // set and get parent stage
+    // setters and getters
     public void setParentStage(Stage stage) {
         parentStage = stage;
     }
-
     public Stage getParentStage() {
         return parentStage;
     }
