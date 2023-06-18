@@ -1,9 +1,11 @@
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class HomeScene extends Scene {
@@ -25,11 +27,17 @@ public class HomeScene extends Scene {
 
         // add buttons
         HBox buttonBox = new HBox();
+        buttonBox.setAlignment(Pos.CENTER);
 
-        Button startButton = new Button("start");
+        Button startButton = new Button("play");
         startButton.setOnAction(e -> controller.handleEvent(Controller.START_GAME));
+        startButton.setDefaultButton(true);
+        startButton.setFont(Font.font("Consolas", 20));
+
         Button endButton = new Button("exit");
         endButton.setOnAction(e -> controller.handleEvent(Controller.EXIT_GAME));
+        endButton.cancelButtonProperty();
+        endButton.setFont(Font.font("Consolas", 20));
 
         buttonBox.getChildren().addAll(startButton, endButton);
         startStackPane.getChildren().add(buttonBox);
