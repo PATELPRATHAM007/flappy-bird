@@ -1,9 +1,11 @@
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class EndScene extends Scene {
@@ -20,17 +22,26 @@ public class EndScene extends Scene {
         ImageView background = new ImageView(new Image("img/city.png"));
         background.setPreserveRatio(true);
         background.setFitWidth(900);
+        background.setOpacity(0.3);
         startStackPane.getChildren().add(background);
 
         // add buttons
+
+        // add buttons
         HBox buttonBox = new HBox();
+        buttonBox.setAlignment(Pos.CENTER);
 
-        Button startButton = new Button("restart");
-        startButton.setOnAction(e -> controller.handleEvent(Controller.START_GAME));
-        Button endButton = new Button("end");
+        Button restartButton = new Button("play again");
+        restartButton.setOnAction(e -> controller.handleEvent(Controller.START_GAME));
+        restartButton.setDefaultButton(true);
+        restartButton.setFont(Font.font("Consolas", 20));
+
+        Button endButton = new Button("exit");
         endButton.setOnAction(e -> controller.handleEvent(Controller.EXIT_GAME));
+        endButton.cancelButtonProperty();
+        endButton.setFont(Font.font("Consolas", 20));
 
-        buttonBox.getChildren().addAll(startButton, endButton);
+        buttonBox.getChildren().addAll(restartButton, endButton);
         startStackPane.getChildren().add(buttonBox);
     }
     
