@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class newApp extends Application {
+public class PrathamApp extends Application {
     private static int Screen_Width = 480;
     private static int Screen_Height = 570;
     private static int ground_width = Screen_Width + 70;

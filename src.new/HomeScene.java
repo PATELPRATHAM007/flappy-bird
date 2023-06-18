@@ -20,6 +20,7 @@ public class HomeScene extends Scene {
         ImageView background = new ImageView(new Image("img/city.png"));
         background.setPreserveRatio(true);
         background.setFitWidth(900);
+        background.setOpacity(0.5);
         startStackPane.getChildren().add(background);
 
         // add buttons

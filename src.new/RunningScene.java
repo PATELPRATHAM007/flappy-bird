@@ -19,6 +19,7 @@ public class RunningScene extends Scene {
         ImageView background = new ImageView(new Image("img/city.png"));
         background.setPreserveRatio(true);
         background.setFitWidth(900);
+        background.setOpacity(0.5);
         runStackPane.getChildren().add(background);
 
         // temp
