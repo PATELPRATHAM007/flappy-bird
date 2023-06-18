@@ -17,7 +17,7 @@ public class Game extends Application{
         // create window
         window = stage;
         window.setTitle("flappy-bird");
-        Extensions.setFixedWindowSize(window, 900, 600);
+        // Extensions.setFixedWindowSize(window, 900, 600);
         window.show();
 
         // load home scene
