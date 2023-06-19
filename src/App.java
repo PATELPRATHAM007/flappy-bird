@@ -1,5 +1,3 @@
-import java.util.function.BooleanSupplier;
-
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -30,17 +28,19 @@ public class App extends Application {
     public static final double MAX_VELOCITY = 10 ;
     public static final double JUMP_VELOCITY = -12;
 
-    private int birdWidth = 100;
-    private int birdHeight = 90;
+    private int birdWidth = 60;
+    private int birdHeight = 50;
 
     private boolean isJumping = false;
     private double velocityY = 0.0;
     private boolean gameEnded = false;
+    private boolean printed = false;
+    private int tempCount = 0;
 
     private static final int PIPE_WIDTH = 250;
     // private static final int PIPE_HEIGHT = 400;
     private static final int PIPE_GAP = 140;
-    private static final int PIPE_SPEED = 2;
+    private static int PIPE_SPEED = 2;
 
     private Group pipeGroup;
     private Timeline pipeTimeline;
@@ -74,7 +74,10 @@ public class App extends Application {
         GridPane buttonGridPane = createGridPane(10, 20);
 
         Button startButton = createButton("Start", 200, 60);
-        startButton.setOnAction(event -> secondStage());
+        startButton.setOnAction(event -> {
+            gameEnded = false;
+            secondStage();
+        });
 
         Button endButton = createButton("End", 200, 60);
         endButton.setOnAction(event -> first_Stage.close());
@@ -162,7 +165,29 @@ public class App extends Application {
     }
 
         // Check collision with pipes
-        
+        for (int i = 0; i < pipeGroup.getChildren().size(); i += 2) {
+            ImageView upperPipe = (ImageView) pipeGroup.getChildren().get(i + 0);
+            ImageView lowerPipe = (ImageView) pipeGroup.getChildren().get(i + 1);
+            if (!printed) {
+                System.out.println("upperpipe");
+                System.out.println(upperPipe);
+                System.out.println("lowerpipe");
+                System.out.println(lowerPipe);
+            }
+            if (upperPipe.getX() + 62 > birdImageView.getX() && upperPipe.getX() < birdImageView.getX() + birdWidth) {
+                if (upperPipe.getY() + 2000 > y) {
+                    gameEnded = true;
+                    PIPE_SPEED = 0;
+                }
+                else if (lowerPipe.getY() < y + birdHeight) {
+                    gameEnded = true;
+                    PIPE_SPEED = 0;
+                    System.out.println("game ended!");
+                }
+            }
+            // System.out.println(upperPipe.getX() + PIPE_WIDTH < birdImageView.getX() + birdWidth);
+        }
+        printed = true;
         //
     }
 
@@ -171,16 +196,17 @@ public class App extends Application {
             // double pipeX = 400 + i * 300; // Initial x-position of the pipe
             // double pipeY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
 
-            double GAPX = 400 + i * 300;
-            double GAP = 120 + 80 * Math.random();
+            double GAPX = 2000 + i * 300;
+            double GAP = 200 + 80 * Math.random();
             double GAPY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
 
 
             // ImageView upperPipe = createImageView("/img/pipe.png", pipeX, 0, PIPE_WIDTH, 200);
             // ImageView lowerPipe = createImageView("/img/antipipe.png", pipeX, pipeY + PIPE_GAP, PIPE_WIDTH, 500 - pipeY - PIPE_GAP);
 
-            ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - 2000, 62, 2000);
-            ImageView lowerPipe = createImageView("/img/up_pipe.png", GAPX, GAPY + GAP, 62, 2000);
+            ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - 2000); // uses h=2000, w=62 of image
+            ImageView lowerPipe = createImageView("/img/up_pipe.png", GAPX, GAPY + GAP);
+
 
             pipeGroup.getChildren().addAll(upperPipe, lowerPipe);
 
@@ -202,7 +228,7 @@ public class App extends Application {
                     lowerPipe.setX(newX);
 
                     // double nGAPX = newX;
-                    double nGAP = 120 + 80 * Math.random();
+                    double nGAP = 200 + 80 * Math.random();
                     double nGAPY = Math.random() * (500 - PIPE_GAP); 
 
                     // double newY = Math.random() * (500 - PIPE_GAP);
@@ -224,6 +250,14 @@ public class App extends Application {
         imageView.setY(y);
         imageView.setFitWidth(width);
         imageView.setFitHeight(height);
+        return imageView;
+    }
+
+    private ImageView createImageView(String imageUrl, double x, double y) {
+        Image image = new Image(getClass().getResourceAsStream(imageUrl));
+        ImageView imageView = new ImageView(image);
+        imageView.setX(x);
+        imageView.setY(y);
         return imageView;
     }
 
