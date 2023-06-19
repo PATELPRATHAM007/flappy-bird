@@ -16,7 +16,9 @@ public class Test extends Application{
         Extensions.setFixedWindowSize(window, 900, 600);
         window.show();
 
-        ImageView iv = new ImageView(new Image("img/bird.png"));
+        Image i = new Image("img/city.png");
+        Image i = new Image(i, 500, 1200, false, false)
+        ImageView iv = new ImageView();
         StackPane sp = new StackPane();
         sp.getChildren().add(iv);
 

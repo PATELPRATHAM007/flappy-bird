@@ -1,3 +1,4 @@
+import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -21,6 +22,15 @@ public class RunningScene extends Scene {
         background.setFitWidth(900);
         background.setOpacity(0.8);
         runStackPane.getChildren().add(background);
+
+        // animination
+        AnimationTimer animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+            }
+        };
+
+        animationTimer.start();
 
         // temp
         System.out.println(controller);
