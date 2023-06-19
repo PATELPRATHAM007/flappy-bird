@@ -93,8 +93,6 @@ public class App extends Application {
         ImageView background = createImageView("/img/xcity.jpg", 0, 0, 480, 500);
         panel.getChildren().add(background);
 
-        ImageView earth = createImageView("/img/earth.png", 0, 500, 480, 130);
-        panel.getChildren().add(earth);
 
         pipeGroup = new Group();
         panel.getChildren().add(pipeGroup);
@@ -123,6 +121,10 @@ public class App extends Application {
         };
 
         birdAnimationTimer.start();
+
+
+        ImageView earth = createImageView("/img/earth.png", 0, 500, 480, 130);
+        panel.getChildren().add(earth);
 
         Scene screen = new Scene(panel, 480, 620);
         primaryStage.setScene(screen);
@@ -160,11 +162,19 @@ public class App extends Application {
 
     private void createPipes() {
         for (int i = 0; i < 3; i++) {
-            double pipeX = 400 + i * 300; // Initial x-position of the pipe
-            double pipeY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
+            // double pipeX = 400 + i * 300; // Initial x-position of the pipe
+            // double pipeY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
 
-            ImageView upperPipe = createImageView("/img/pipe.png", pipeX, 0, PIPE_WIDTH, 200);
-            ImageView lowerPipe = createImageView("/img/antipipe.png", pipeX, pipeY + PIPE_GAP, PIPE_WIDTH, 500 - pipeY - PIPE_GAP);
+            double GAPX = 400 + i * 300;
+            double GAP = 120 + 80 * Math.random();
+            double GAPY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
+
+
+            // ImageView upperPipe = createImageView("/img/pipe.png", pipeX, 0, PIPE_WIDTH, 200);
+            // ImageView lowerPipe = createImageView("/img/antipipe.png", pipeX, pipeY + PIPE_GAP, PIPE_WIDTH, 500 - pipeY - PIPE_GAP);
+
+            ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - 2000, 62, 2000);
+            ImageView lowerPipe = createImageView("/img/up_pipe.png", GAPX, GAPY + GAP, 62, 2000);
 
             pipeGroup.getChildren().addAll(upperPipe, lowerPipe);
 
@@ -185,11 +195,15 @@ public class App extends Application {
                     upperPipe.setX(newX);
                     lowerPipe.setX(newX);
 
-                    double newY = Math.random() * (500 - PIPE_GAP);
-                    upperPipe.setY(0);
-                    upperPipe.setFitHeight(newY);
-                    lowerPipe.setY(newY + PIPE_GAP);
-                    lowerPipe.setFitHeight(500 - newY - PIPE_GAP);
+                    // double nGAPX = newX;
+                    double nGAP = 120 + 80 * Math.random();
+                    double nGAPY = Math.random() * (500 - PIPE_GAP); 
+
+                    // double newY = Math.random() * (500 - PIPE_GAP);
+                    upperPipe.setY(nGAPY - 2000);
+                    upperPipe.setFitHeight(2000);
+                    lowerPipe.setY(nGAP + nGAPY);
+                    lowerPipe.setFitHeight(2000);
                 }
             });
 
