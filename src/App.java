@@ -1,3 +1,5 @@
+import java.util.function.BooleanSupplier;
+
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -28,8 +30,12 @@ public class App extends Application {
     public static final double MAX_VELOCITY = 10 ;
     public static final double JUMP_VELOCITY = -12;
 
+    private int birdWidth = 100;
+    private int birdHeight = 90;
+
     private boolean isJumping = false;
     private double velocityY = 0.0;
+    private boolean gameEnded = false;
 
     private static final int PIPE_WIDTH = 250;
     // private static final int PIPE_HEIGHT = 400;
@@ -62,7 +68,7 @@ public class App extends Application {
         scaleTransition.setCycleCount(Timeline.INDEFINITE);
         scaleTransition.play();
 
-        birdImageView = createImageView("img/bird.png", 200, 120, 100, 90);
+        birdImageView = createImageView("img/bird.png", 200, 120, birdWidth, birdHeight);
         panel.getChildren().add(birdImageView);
 
         GridPane buttonGridPane = createGridPane(10, 20);
@@ -157,7 +163,7 @@ public class App extends Application {
 
         // Check collision with pipes
         
-        // ...
+        //
     }
 
     private void createPipes() {
