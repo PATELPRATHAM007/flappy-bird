@@ -26,7 +26,7 @@ public class App extends Application {
     public static double y = 50 * 1.5;
     public static final double GRAVITY = 0.9;
     public static final double MAX_VELOCITY = 10 ;
-    public static final double JUMP_VELOCITY = -12;
+    public static final double JUMP_VELOCITY = -8;
 
     private int birdWidth = 60;
     private int birdHeight = 50;
@@ -35,7 +35,6 @@ public class App extends Application {
     private double velocityY = 0.0;
     private boolean gameEnded = false;
     private boolean printed = false;
-    private int tempCount = 0;
 
     private static final int PIPE_WIDTH = 250;
     // private static final int PIPE_HEIGHT = 400;
@@ -147,22 +146,24 @@ public class App extends Application {
     }
 
     private void updateBirdPosition() {
-        if (isJumping) {
-            velocityY += GRAVITY;
-            velocityY = Math.min(velocityY, MAX_VELOCITY);
-            y += velocityY;
+        if (!gameEnded) {
+            if (isJumping) {
+                velocityY += GRAVITY;
+                velocityY = Math.min(velocityY, MAX_VELOCITY);
+                y += velocityY;
+            }
+
+            // Adjust bird position
+            birdImageView.setY(y);
+
+            // Check collision with ground
+            if (y + Circle_radius * 2 >= ScreenHeight) {
+            // Bounce the bird back up
+            y = ScreenHeight - Circle_radius * 2;
+            velocityY = JUMP_VELOCITY;
+            isJumping = false;
+            }
         }
-
-        // Adjust bird position
-        birdImageView.setY(y);
-
-        // Check collision with ground
-        if (y + Circle_radius * 2 >= ScreenHeight) {
-        // Bounce the bird back up
-        y = ScreenHeight - Circle_radius * 2;
-        velocityY = JUMP_VELOCITY;
-        isJumping = false;
-    }
 
         // Check collision with pipes
         for (int i = 0; i < pipeGroup.getChildren().size(); i += 2) {
