@@ -42,7 +42,7 @@ public class App extends Application {
 
     private static final int PIPE_WIDTH = 250;
     // private static final int PIPE_HEIGHT = 400;
-    private static final int PIPE_GAP = 140;
+    private static final int PIPE_GAP = 110;
     private static int PIPE_SPEED = 2;
 
     private Group pipeGroup;
