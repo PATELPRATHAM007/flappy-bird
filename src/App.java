@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -25,7 +27,7 @@ public class App extends Application {
     public static final int x = line_Y - Circle_radius * 2 - 50;
     public static double y = 50 * 1.5;
     public static final double GRAVITY = 0.9;
-    public static final double MAX_VELOCITY = 10 ;
+    public static final double MAX_VELOCITY = 10;
     public static final double JUMP_VELOCITY = -8;
 
     private int birdWidth = 60;
@@ -34,7 +36,8 @@ public class App extends Application {
     private boolean isJumping = false;
     private double velocityY = 0.0;
     private boolean gameEnded = false;
-    private boolean printed = false;
+    private int score = 0;
+    private ArrayList<ImageView> successfulPipes = new ArrayList<ImageView>();
 
     private static final int PIPE_WIDTH = 250;
     // private static final int PIPE_HEIGHT = 400;
@@ -101,7 +104,6 @@ public class App extends Application {
         ImageView background = createImageView("/img/xcity.jpg", 0, 0, 480, 500);
         panel.getChildren().add(background);
 
-
         pipeGroup = new Group();
         panel.getChildren().add(pipeGroup);
         pipeTimeline = new Timeline();
@@ -130,7 +132,6 @@ public class App extends Application {
 
         birdAnimationTimer.start();
 
-
         ImageView earth = createImageView("/img/earth.png", 0, 500, 480, 130);
         panel.getChildren().add(earth);
 
@@ -158,10 +159,10 @@ public class App extends Application {
 
             // Check collision with ground
             if (y + Circle_radius * 2 >= ScreenHeight) {
-            // Bounce the bird back up
-            y = ScreenHeight - Circle_radius * 2;
-            velocityY = JUMP_VELOCITY;
-            isJumping = false;
+                // Bounce the bird back up
+                y = ScreenHeight - Circle_radius * 2;
+                velocityY = JUMP_VELOCITY;
+                isJumping = false;
             }
         }
 
@@ -169,45 +170,55 @@ public class App extends Application {
         for (int i = 0; i < pipeGroup.getChildren().size(); i += 2) {
             ImageView upperPipe = (ImageView) pipeGroup.getChildren().get(i + 0);
             ImageView lowerPipe = (ImageView) pipeGroup.getChildren().get(i + 1);
-            if (!printed) {
-                System.out.println("upperpipe");
-                System.out.println(upperPipe);
-                System.out.println("lowerpipe");
-                System.out.println(lowerPipe);
-            }
             if (upperPipe.getX() + 62 > birdImageView.getX() && upperPipe.getX() < birdImageView.getX() + birdWidth) {
                 if (upperPipe.getY() + 2000 > y) {
                     gameEnded = true;
                     PIPE_SPEED = 0;
-                }
-                else if (lowerPipe.getY() < y + birdHeight) {
+                } else if (lowerPipe.getY() < y + birdHeight) {
                     gameEnded = true;
                     PIPE_SPEED = 0;
                     System.out.println("game ended!");
                 }
+            } else if (upperPipe.getX() + 62 < birdImageView.getX()) {
+                boolean breaked = false;
+                for (int j = 0; j < successfulPipes.size(); j++) {
+                    if (successfulPipes.get(j) == upperPipe) {
+                        breaked = true;
+                        break;
+                    }
+                }
+                if (!breaked) {
+                    score++;
+                    successfulPipes.add(upperPipe);
+                }
             }
-            // System.out.println(upperPipe.getX() + PIPE_WIDTH < birdImageView.getX() + birdWidth);
+
+            // System.out.println((ImageView) pipeGroup.getChildren().get(0));
+            // System.out.println(upperPipe.getX() + PIPE_WIDTH < birdImageView.getX() +
+            // birdWidth);
         }
-        printed = true;
+        System.out.println(score);
         //
     }
 
     private void createPipes() {
         for (int i = 0; i < 3; i++) {
             // double pipeX = 400 + i * 300; // Initial x-position of the pipe
-            // double pipeY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
+            // double pipeY = Math.random() * (500 - PIPE_GAP); // Random y-position of the
+            // pipe opening
 
             double GAPX = 2000 + i * 300;
             double GAP = 200 + 80 * Math.random();
             double GAPY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
 
+            // ImageView upperPipe = createImageView("/img/pipe.png", pipeX, 0, PIPE_WIDTH,
+            // 200);
+            // ImageView lowerPipe = createImageView("/img/antipipe.png", pipeX, pipeY +
+            // PIPE_GAP, PIPE_WIDTH, 500 - pipeY - PIPE_GAP);
 
-            // ImageView upperPipe = createImageView("/img/pipe.png", pipeX, 0, PIPE_WIDTH, 200);
-            // ImageView lowerPipe = createImageView("/img/antipipe.png", pipeX, pipeY + PIPE_GAP, PIPE_WIDTH, 500 - pipeY - PIPE_GAP);
-
-            ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - 2000); // uses h=2000, w=62 of image
+            ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - 2000); // uses h=2000, w=62 of
+                                                                                            // image
             ImageView lowerPipe = createImageView("/img/up_pipe.png", GAPX, GAPY + GAP);
-
 
             pipeGroup.getChildren().addAll(upperPipe, lowerPipe);
 
@@ -218,6 +229,7 @@ public class App extends Application {
 
                 // Check if the pipe is off the screen, then reset its position
                 if (upperPipe.getX() + PIPE_WIDTH < 0) {
+                    successfulPipes.remove(upperPipe);
                     double newX = pipeGroup.getChildren().stream()
                             .filter(node -> node instanceof ImageView)
                             .map(node -> (ImageView) node)
@@ -230,7 +242,7 @@ public class App extends Application {
 
                     // double nGAPX = newX;
                     double nGAP = 200 + 80 * Math.random();
-                    double nGAPY = Math.random() * (500 - PIPE_GAP); 
+                    double nGAPY = Math.random() * (500 - PIPE_GAP);
 
                     // double newY = Math.random() * (500 - PIPE_GAP);
                     upperPipe.setY(nGAPY - 2000);
