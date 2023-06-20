@@ -10,22 +10,24 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class App extends Application {
 
-    public static final int SCREEN_WIDTH = 500;
-    public static final int SCREEN_HEIGHT = 550;
-    public static final int LINEY = 400;
-    public static final int CIRCLE_RADIUS = 50;
-    public static final int birdPositionX = LINEY - CIRCLE_RADIUS * 2 - 50;
-    public static double birdPositionY = 50 * 1.5;
+    public static final int ScreenWidth = 500;
+    public static final int ScreenHeight = 550;
+    public static final int line_Y = 400;
+    public static final int Circle_radius = 50;
+    public static final int x = line_Y - Circle_radius * 2 - 50;
+    public static double y = 50 * 1.5;
     public static final double GRAVITY = 0.9;
     public static final double MAX_VELOCITY = 10;
     public static final double JUMP_VELOCITY = -8;
@@ -39,14 +41,15 @@ public class App extends Application {
     private int score = 0;
     private ArrayList<ImageView> successfulPipes = new ArrayList<ImageView>();
 
-    private static final int PIPE_WIDTH = 62;
-    private static final int PIPE_HEIGHT = 2000;
+    private static final int PIPE_WIDTH = 250;
+    // private static final int PIPE_HEIGHT = 400;
     private static final int PIPE_GAP = 140;
     private static int PIPE_SPEED = 2;
 
     private Group pipeGroup;
     private Timeline pipeTimeline;
     private ImageView birdImageView;
+    private Label sLabel;
 
     @Override
     public void start(Stage first_Stage) throws Exception {
@@ -135,6 +138,18 @@ public class App extends Application {
         ImageView earth = createImageView("/img/earth.png", 0, 500, 480, 130);
         panel.getChildren().add(earth);
 
+        sLabel = new Label("" + score);
+        sLabel.setStyle("-fx-font-size: 80px; -fx-font-family: Arial; -fx-text-fill: white;");
+        sLabel.setLayoutX(230); // Adjust the X position
+        sLabel.setLayoutY(30); 
+
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(Color.BLACK);
+        dropShadow.setRadius(2);
+        dropShadow.setSpread(2);
+        sLabel.setEffect(dropShadow);
+
+        panel.getChildren().add(sLabel);
         Scene screen = new Scene(panel, 480, 620);
         primaryStage.setScene(screen);
         primaryStage.show();
@@ -151,16 +166,16 @@ public class App extends Application {
             if (isJumping) {
                 velocityY += GRAVITY;
                 velocityY = Math.min(velocityY, MAX_VELOCITY);
-                birdPositionY += velocityY;
+                y += velocityY;
             }
 
             // Adjust bird position
-            birdImageView.setY(birdPositionY);
+            birdImageView.setY(y);
 
             // Check collision with ground
-            if (birdPositionY + CIRCLE_RADIUS * 2 >= SCREEN_HEIGHT) {
+            if (y + Circle_radius * 2 >= ScreenHeight) {
                 // Bounce the bird back up
-                birdPositionY = SCREEN_HEIGHT - CIRCLE_RADIUS * 2;
+                y = ScreenHeight - Circle_radius * 2;
                 velocityY = JUMP_VELOCITY;
                 isJumping = false;
             }
@@ -171,10 +186,10 @@ public class App extends Application {
             ImageView upperPipe = (ImageView) pipeGroup.getChildren().get(i + 0);
             ImageView lowerPipe = (ImageView) pipeGroup.getChildren().get(i + 1);
             if (upperPipe.getX() + 62 > birdImageView.getX() && upperPipe.getX() < birdImageView.getX() + birdWidth) {
-                if (upperPipe.getY() + PIPE_HEIGHT > birdPositionY) {
+                if (upperPipe.getY() + 2000 > y) {
                     gameEnded = true;
                     PIPE_SPEED = 0;
-                } else if (lowerPipe.getY() < birdPositionY + birdHeight) {
+                } else if (lowerPipe.getY() < y + birdHeight) {
                     gameEnded = true;
                     PIPE_SPEED = 0;
                     System.out.println("game ended!");
@@ -189,6 +204,7 @@ public class App extends Application {
                 }
                 if (!breaked) {
                     score++;
+                    sLabel.setText("" + score);
                     successfulPipes.add(upperPipe);
                 }
             }
@@ -207,7 +223,7 @@ public class App extends Application {
             // double pipeY = Math.random() * (500 - PIPE_GAP); // Random y-position of the
             // pipe opening
 
-            double GAPX = PIPE_HEIGHT + i * 300;
+            double GAPX = 2000 + i * 300;
             double GAP = 200 + 80 * Math.random();
             double GAPY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
 
@@ -216,7 +232,7 @@ public class App extends Application {
             // ImageView lowerPipe = createImageView("/img/antipipe.png", pipeX, pipeY +
             // PIPE_GAP, PIPE_WIDTH, 500 - pipeY - PIPE_GAP);
 
-            ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - PIPE_HEIGHT); // uses h=2000, w=62 of
+            ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - 2000); // uses h=2000, w=62 of
                                                                                             // image
             ImageView lowerPipe = createImageView("/img/up_pipe.png", GAPX, GAPY + GAP);
 
@@ -245,10 +261,10 @@ public class App extends Application {
                     double nGAPY = Math.random() * (500 - PIPE_GAP);
 
                     // double newY = Math.random() * (500 - PIPE_GAP);
-                    upperPipe.setY(nGAPY - PIPE_HEIGHT);
-                    upperPipe.setFitHeight(PIPE_HEIGHT);
+                    upperPipe.setY(nGAPY - 2000);
+                    upperPipe.setFitHeight(2000);
                     lowerPipe.setY(nGAP + nGAPY);
-                    lowerPipe.setFitHeight(PIPE_HEIGHT);
+                    lowerPipe.setFitHeight(2000);
                 }
             });
 
@@ -296,6 +312,7 @@ public class App extends Application {
         gridPane.setVgap(vGap);
         return gridPane;
     }
+    
 
     public static void main(String[] args) {
         launch(args);
