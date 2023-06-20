@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -49,21 +48,27 @@ public class App extends Application {
     private Group pipeGroup;
     private Timeline pipeTimeline;
     private ImageView birdImageView;
-    private Label sLabel;
+    private Label ScoreLabel;
 
     @Override
     public void start(Stage first_Stage) throws Exception {
+        //set the title for frist_stage
         first_Stage.setTitle("Flappy Bird");
+        //create pane for adding element
         Pane panel = new Pane();
 
+        //adding background image
         ImageView background = createImageView("/img/xcity.jpg", 0, 0, 500, 450);
         panel.getChildren().add(0, background);
 
+        // adding flappy bird logo
         Label logo = createLabelWithImage("img/logo.png", 450, 100);
         panel.getChildren().add(logo);
+        //set logo position
         logo.setLayoutX(20);
         logo.setLayoutY(10);
 
+        //set scallertransion to the logo
         ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(2), logo);
         scaleTransition.setFromX(1.0);
         scaleTransition.setFromY(1.0);
@@ -73,86 +78,107 @@ public class App extends Application {
         scaleTransition.setCycleCount(Timeline.INDEFINITE);
         scaleTransition.play();
 
-        birdImageView = createImageView("img/bird.png", 200, 120, birdWidth, birdHeight);
+        //add bird image
+        birdImageView = createImageView("img/bird.png", 200, 120, 100, 90);
         panel.getChildren().add(birdImageView);
 
+        //add gridpane for button
         GridPane buttonGridPane = createGridPane(10, 20);
 
+        //start button for start game
         Button startButton = createButton("Start", 200, 60);
+
+        //for the opening flappy bird game screen
         startButton.setOnAction(event -> {
             gameEnded = false;
             secondStage();
         });
 
+        //for exit the game
         Button endButton = createButton("End", 200, 60);
         endButton.setOnAction(event -> first_Stage.close());
 
+        //horizontally set button
         buttonGridPane.add(startButton, 0, 0);
         buttonGridPane.add(endButton, 0, 1);
-
         panel.getChildren().add(buttonGridPane);
+        
+        //set gridpane in screen layout
         buttonGridPane.setLayoutX(150);
         buttonGridPane.setLayoutY(250);
 
+        //create scene object for show the element in screen
         Scene screen = new Scene(panel, 500, 450);
+        //set the screen on the stage
         first_Stage.setScene(screen);
+        //for show the stage
         first_Stage.show();
     }
 
     private void secondStage() {
-        Stage primaryStage = new Stage();
-        primaryStage.setTitle("Flappy Bird");
-        Pane panel = new Pane();
+        Stage game_stage = new Stage(); // cerate new stage
+        game_stage.setTitle("Flappy Bird"); //set title for game_stage
+        Pane panel = new Pane();//create panel for adding element
 
+        //create the background image
         ImageView background = createImageView("/img/xcity.jpg", 0, 0, 480, 500);
         panel.getChildren().add(background);
 
+        //create pipe for take upper pipe and lower pipe
         pipeGroup = new Group();
         panel.getChildren().add(pipeGroup);
         pipeTimeline = new Timeline();
+        //use the create pipe method for maeking pipe
         createPipes();
-
+        //create pipetimeline for handleng moving pipe animation 
         pipeTimeline.setCycleCount(Animation.INDEFINITE);
         pipeTimeline.setAutoReverse(false);
 
+        //create bird image
         birdImageView = createImageView("/img/bird.png", 210, 120, 60, 50);
         panel.getChildren().add(birdImageView);
 
         birdImageView.setOnKeyPressed(event -> {
+            //if player chick the space button than bird will be jump
             if (event.getCode() == KeyCode.SPACE) {
+                //use the jump method for pushing bird in upwared direction 
                 jump();
             }
         });
-
+        //allow the event
         birdImageView.setFocusTraversable(true);
 
+        //make animationtimer for checking bird postion like bird was collide with pipe or not and also check bird was collide will earth or not
         AnimationTimer birdAnimationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                //use below function for checkingbird position
                 updateBirdPosition();
             }
         };
-
+        //start animation timer 
         birdAnimationTimer.start();
 
+        //create the earth 
         ImageView earth = createImageView("/img/earth.png", 0, 500, 480, 130);
         panel.getChildren().add(earth);
 
-        sLabel = new Label("" + score);
-        sLabel.setStyle("-fx-font-size: 80px; -fx-font-family: Arial; -fx-text-fill: white;");
-        sLabel.setLayoutX(230); // Adjust the X position
-        sLabel.setLayoutY(30); 
+        //create score lable for display the score on screen
+        ScoreLabel = new Label("" + score);
+        ScoreLabel.setStyle("-fx-font-size: 80px; -fx-font-family: Arial; -fx-text-fill: white;");
+        ScoreLabel.setLayoutX(215); // Adjust the X position
+        ScoreLabel.setLayoutY(30); // Adjust the y position
 
+        //making dropshadow for score text boarder
         DropShadow dropShadow = new DropShadow();
         dropShadow.setColor(Color.BLACK);
         dropShadow.setRadius(2);
         dropShadow.setSpread(2);
-        sLabel.setEffect(dropShadow);
-
-        panel.getChildren().add(sLabel);
+        ScoreLabel.setEffect(dropShadow); // set this on lable text
+        panel.getChildren().add(ScoreLabel);
         Scene screen = new Scene(panel, 480, 620);
-        primaryStage.setScene(screen);
-        primaryStage.show();
+        game_stage.setScene(screen); 
+        game_stage.show();
         pipeTimeline.play();
     }
 
@@ -204,14 +230,10 @@ public class App extends Application {
                 }
                 if (!breaked) {
                     score++;
-                    sLabel.setText("" + score);
+                    ScoreLabel.setText("" + score);
                     successfulPipes.add(upperPipe);
                 }
             }
-
-            // System.out.println((ImageView) pipeGroup.getChildren().get(0));
-            // System.out.println(upperPipe.getX() + PIPE_WIDTH < birdImageView.getX() +
-            // birdWidth);
         }
         System.out.println(score);
         //
@@ -219,18 +241,10 @@ public class App extends Application {
 
     private void createPipes() {
         for (int i = 0; i < 3; i++) {
-            // double pipeX = 400 + i * 300; // Initial x-position of the pipe
-            // double pipeY = Math.random() * (500 - PIPE_GAP); // Random y-position of the
-            // pipe opening
 
             double GAPX = 2000 + i * 300;
             double GAP = 200 + 80 * Math.random();
             double GAPY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
-
-            // ImageView upperPipe = createImageView("/img/pipe.png", pipeX, 0, PIPE_WIDTH,
-            // 200);
-            // ImageView lowerPipe = createImageView("/img/antipipe.png", pipeX, pipeY +
-            // PIPE_GAP, PIPE_WIDTH, 500 - pipeY - PIPE_GAP);
 
             ImageView upperPipe = createImageView("/img/down_pipe.png", GAPX, GAPY - 2000); // uses h=2000, w=62 of
                                                                                             // image
