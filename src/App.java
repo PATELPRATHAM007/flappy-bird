@@ -28,9 +28,8 @@ public class App extends Application {
     public static final int x = line_Y - Circle_radius * 2 - 50;
     public static double y = 50 * 1.5;
     public static final double GRAVITY = 0.9;
-    public static final double MAX_VELOCITY = 5;
+    public static final double MAX_VELOCITY = 10;
     public static final double JUMP_VELOCITY = -8;
-    private Stage gameStage;
 
     private int birdWidth = 60;
     private int birdHeight = 50;
@@ -39,9 +38,7 @@ public class App extends Application {
     private double velocityY = 0.0;
     private boolean gameEnded = false;
     private int score = 0;
-    private int highScore = 0;
     private ArrayList<ImageView> successfulPipes = new ArrayList<ImageView>();
-    private int SRART_PIPE_POSITION = 500;
 
     private static final int PIPE_WIDTH = 250;
     // private static final int PIPE_HEIGHT = 400;
@@ -119,11 +116,9 @@ public class App extends Application {
     }
 
     private void secondStage() {
-        gameStage = new Stage(); // cerate new stage
-        gameStage.setTitle("Flappy Bird"); //set title for gameStage
+        Stage game_stage = new Stage(); // cerate new stage
+        game_stage.setTitle("Flappy Bird"); //set title for game_stage
         Pane panel = new Pane();//create panel for adding element
-        gameEnded = false;
-        score = 0;
 
         //create the background image
         ImageView background = createImageView("/img/xcity.jpg", 0, 0, 480, 500);
@@ -182,8 +177,8 @@ public class App extends Application {
         ScoreLabel.setEffect(dropShadow); // set this on lable text
         panel.getChildren().add(ScoreLabel);
         Scene screen = new Scene(panel, 480, 620);
-        gameStage.setScene(screen); 
-        gameStage.show();
+        game_stage.setScene(screen); 
+        game_stage.show();
         pipeTimeline.play();
     }
 
@@ -218,11 +213,12 @@ public class App extends Application {
             ImageView lowerPipe = (ImageView) pipeGroup.getChildren().get(i + 1);
             if (upperPipe.getX() + 62 > birdImageView.getX() && upperPipe.getX() < birdImageView.getX() + birdWidth) {
                 if (upperPipe.getY() + 2000 > y) {
-                    endGame();
+                    gameEnded = true;
                     PIPE_SPEED = 0;
                 } else if (lowerPipe.getY() < y + birdHeight) {
-                    endGame();
+                    gameEnded = true;
                     PIPE_SPEED = 0;
+                    System.out.println("game ended!");
                 }
             } else if (upperPipe.getX() + 62 < birdImageView.getX()) {
                 boolean breaked = false;
@@ -239,15 +235,14 @@ public class App extends Application {
                 }
             }
         }
-        System.out.println("score: " + score);
-        System.out.println("high score: " + highScore);
+        System.out.println(score);
         //
     }
 
     private void createPipes() {
         for (int i = 0; i < 3; i++) {
 
-            double GAPX = SRART_PIPE_POSITION + i * 300;
+            double GAPX = 2000 + i * 300;
             double GAP = 200 + 80 * Math.random();
             double GAPY = Math.random() * (500 - PIPE_GAP); // Random y-position of the pipe opening
 
@@ -331,15 +326,7 @@ public class App extends Application {
         gridPane.setVgap(vGap);
         return gridPane;
     }
-
-
-    private void endGame() {
-        gameStage.close();
-        gameEnded = true;
-        if (highScore < score) {
-            highScore = score;
-        }
-    }
+    
 
     public static void main(String[] args) {
         launch(args);
